@@ -24,7 +24,26 @@ describe('POST /login', function () {
 
     const response = await chai.request(app)
       .post('/login')
-      .send({ username: mockUser.username, password: 'sapatilha' });
+      .send({ username: mockUser.username, password: 'Kekw' });
+
+    expect(response).to.have.status(401);
+  });
+
+  it('should fail when the username is incorrect', async function () {
+    const mockUser = {
+      id: 1,
+      username: 'Emerson',
+      level: 15,
+      vocation: 'Elite Knight',
+      password: 'TrybePassword'
+    };
+
+    const mockUserRequired = UserModel.build(mockUser);
+    sinon.stub(UserModel, 'findOne').resolves(mockUserRequired);
+
+    const response = await chai.request(app)
+      .post('/login')
+      .send({ username: 'Emerson2', password: mockUser.password });
 
     expect(response).to.have.status(401);
   });
